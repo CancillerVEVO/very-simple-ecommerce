@@ -1,6 +1,6 @@
 package com.stellatech.elopezo.ecommerce.api.orders;
 
-import com.stellatech.elopezo.ecommerce.api.products.Product;
+import com.stellatech.elopezo.ecommerce.api.order_items.OrderItems;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -41,16 +41,13 @@ public class Order {
     )
     private LocalDateTime updatedAt;
 
-    @Column(name = "last_login_at",
-            columnDefinition = "TIMESTAMP WITH TIME ZONE",
-            insertable = false
-    )
-    private LocalDateTime lastLoginAt;
-
     @Column(name = "deleted_at",
             columnDefinition = "TIMESTAMP WITH TIME ZONE",
             insertable = false
     )
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "order")
+    private Set<OrderItems> orderItems;
 
 }

@@ -1,11 +1,13 @@
 package com.stellatech.elopezo.ecommerce.api.products;
 
+import com.stellatech.elopezo.ecommerce.api.orders.Order;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -55,6 +57,5 @@ public class Product {
             insertable = false
     )
     private LocalDateTime deletedAt;
-
 
 }

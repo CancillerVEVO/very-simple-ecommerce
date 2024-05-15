@@ -1,5 +1,6 @@
 package com.stellatech.elopezo.ecommerce.api.users;
 
+import com.stellatech.elopezo.ecommerce.api.orders.Order;
 import com.stellatech.elopezo.ecommerce.api.products.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -66,4 +67,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Product> products;
 
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 }

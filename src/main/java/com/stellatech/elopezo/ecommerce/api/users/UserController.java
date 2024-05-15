@@ -1,4 +1,4 @@
-package com.stellatech.elopezo.ecommerce.api.user;
+package com.stellatech.elopezo.ecommerce.api.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

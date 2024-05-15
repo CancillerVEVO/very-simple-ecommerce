@@ -1,35 +1,42 @@
-package com.stellatech.elopezo.ecommerce.api.products;
+package com.stellatech.elopezo.ecommerce.api.users;
 
-import com.stellatech.elopezo.ecommerce.api.users.User;
+import com.stellatech.elopezo.ecommerce.api.products.Product;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "users")
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name = "user_id")
     private Long id;
-    @Column(length = 64, nullable = false)
-    private String name;
-    @Column(length = 128)
-    private String description;
-    private Integer stock;
-    private Double price;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "user_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_products_users")
-    )
-    private User user;
+    @Column(name = "username",
+            length = 32,
+            unique = true,
+            nullable = false)
+    private String username;
+
+    @Column(name = "email",
+            length = 64,
+            unique = true,
+            nullable = false)
+    private String email;
+
+    @Column(name = "password",
+            nullable = false)
+    private String password;
+
+    @Column(length = 128)
+    private String biography;
+
 
     @Column(name = "created_at",
             columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP",
@@ -56,5 +63,7 @@ public class Product {
     )
     private LocalDateTime deletedAt;
 
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
 
 }

@@ -1,12 +1,10 @@
 package com.stellatech.elopezo.ecommerce.api.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -19,5 +17,15 @@ public class UserController {
     @GetMapping
     public Iterable<User> getUsers() {
         return userService.getUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.getUser(id);
+    }
+
+    @PostMapping
+    public User registerUser(@RequestBody User user) {
+        return userService.registerUser(user);
     }
 }

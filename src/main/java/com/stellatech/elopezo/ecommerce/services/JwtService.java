@@ -1,10 +1,9 @@
-package com.stellatech.elopezo.ecommerce.api.services;
+package com.stellatech.elopezo.ecommerce.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,8 +21,8 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("security.jwt.expiration-time")
-    private Long jwtExpiration;
+    @Value("${security.jwt.expiration-time}")
+    private String jwtExpiration;
 
     private String buildToken(
             Map<String, Object> extraClaims,
@@ -45,11 +44,11 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+        return buildToken(extraClaims, userDetails, Long.parseLong(jwtExpiration));
     }
 
     public String generateToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, jwtExpiration);
+        return buildToken(new HashMap<>(), userDetails, Long.parseLong(jwtExpiration));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -79,7 +78,7 @@ public class JwtService {
    }
 
    public long getExpirationTime() {
-        return jwtExpiration;
+        return Long.parseLong(jwtExpiration);
    }
 
    public boolean isTokenValid(String token, UserDetails userDetails) {

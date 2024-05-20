@@ -1,4 +1,4 @@
-package com.stellatech.elopezo.ecommerce.api.auth;
+package com.stellatech.elopezo.ecommerce.api.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,12 @@
 package com.stellatech.elopezo.ecommerce.api.auth;
 
+import com.stellatech.elopezo.ecommerce.api.auth.dto.LoginResponse;
+import com.stellatech.elopezo.ecommerce.api.auth.dto.LoginUserRequest;
+import com.stellatech.elopezo.ecommerce.api.auth.dto.RegisterUserRequestDto;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import com.stellatech.elopezo.ecommerce.services.JwtService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,11 +26,10 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserRequest registerUserRequest) {
+    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserRequestDto registerUserRequest) {
         User registeredUser = authenticationService.signUp(registerUserRequest);
 
-
-        return ResponseEntity.ok(registeredUser);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

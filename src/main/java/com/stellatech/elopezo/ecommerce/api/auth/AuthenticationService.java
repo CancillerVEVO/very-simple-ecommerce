@@ -1,5 +1,7 @@
 package com.stellatech.elopezo.ecommerce.api.auth;
 
+import com.stellatech.elopezo.ecommerce.api.auth.dto.LoginUserRequest;
+import com.stellatech.elopezo.ecommerce.api.auth.dto.RegisterUserRequestDto;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import com.stellatech.elopezo.ecommerce.api.users.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +22,7 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    public User signUp(RegisterUserRequest input) {
+    public User signUp(RegisterUserRequestDto input) {
         User user = new User();
         user.setUsername(input.getUsername());
         user.setEmail(input.getEmail());

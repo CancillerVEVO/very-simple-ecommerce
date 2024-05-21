@@ -1,7 +1,5 @@
 package com.stellatech.elopezo.ecommerce.api.users;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +19,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+        return userService.getById(id);
     }
 
     @PostMapping

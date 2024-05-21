@@ -1,13 +1,14 @@
 package com.stellatech.elopezo.ecommerce.exceptions;
 
+import com.stellatech.elopezo.ecommerce.api.auth.exceptions.UserAuthenticationException;
+import com.stellatech.elopezo.ecommerce.api.users.exceptions.UserAlredyExistsException;
+import com.stellatech.elopezo.ecommerce.api.users.exceptions.UserNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,4 +32,26 @@ public class GlobalExceptionHandler  {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({UserAlredyExistsException.class})
+    public ResponseEntity<Object> handleUserAlreadyExists(UserAlredyExistsException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<Object> handleUserNotFound(UserNotFoundException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({UserAuthenticationException.class})
+    public ResponseEntity<Object> handleUserAuthentication(UserAuthenticationException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
 }
+
+

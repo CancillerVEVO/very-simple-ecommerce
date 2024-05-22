@@ -37,13 +37,15 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    public void deleteProduct(@PathVariable Long id, HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        productService.deleteProduct(id, userId);
     }
 
     @PutMapping("/{id}")
-    public ProductDetailResponseDto updateProduct(@PathVariable Long id, @RequestBody CreateProductRequestDto product) {
-        Product updatedProduct = productService.updateProduct(id, product);
+    public ProductDetailResponseDto updateProduct(@PathVariable Long id, @RequestBody CreateProductRequestDto product, HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        Product updatedProduct = productService.updateProduct(id, product, userId);
         return ProductDetailResponseDto.fromProduct(updatedProduct);
     }
 }

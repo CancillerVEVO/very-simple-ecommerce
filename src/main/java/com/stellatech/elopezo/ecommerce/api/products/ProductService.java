@@ -2,6 +2,7 @@ package com.stellatech.elopezo.ecommerce.api.products;
 
 import com.stellatech.elopezo.ecommerce.api.products.dto.CreateProductRequestDto;
 import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductNotFoundException;
+import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductPermissionException;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import com.stellatech.elopezo.ecommerce.api.users.UserService;
 import org.springframework.stereotype.Service;
@@ -40,22 +41,33 @@ public class ProductService {
 
     }
 
-    public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id).
-                orElseThrow(()-> new ProductNotFoundException("Producto no encontrado"));
+    public void deleteProduct(Long id, Long userId) {
 
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new ProductNotFoundException("Producto no encontrado")
+        );
+
+        if (!product.getUser().getId().equals(userId)) {
+            throw new ProductPermissionException("No tienes permiso para eliminar este producto");
+        }
         productRepository.delete(product);
     }
 
-public Product updateProduct(Long id, CreateProductRequestDto product) {
+public Product updateProduct(Long id, CreateProductRequestDto product, Long userId) {
         Product existingProduct = productRepository.findById(id).orElseThrow(
                 () -> new ProductNotFoundException("Producto no encontrado")
         );
+
+
+        if (!existingProduct.getUser().getId().equals(userId)) {
+            throw new ProductPermissionException("No tienes permiso para actualizar este producto");
+        }
 
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setStock(product.getStock());
+
         return productRepository.save(existingProduct);
     }
 

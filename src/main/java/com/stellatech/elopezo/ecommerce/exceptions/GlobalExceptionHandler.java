@@ -2,6 +2,7 @@ package com.stellatech.elopezo.ecommerce.exceptions;
 
 import com.stellatech.elopezo.ecommerce.api.auth.exceptions.UserAuthenticationException;
 import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductNotFoundException;
+import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductPermissionException;
 import com.stellatech.elopezo.ecommerce.api.users.exceptions.UserAlredyExistsException;
 import com.stellatech.elopezo.ecommerce.api.users.exceptions.UserNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -13,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.access.AccessDeniedException;
 
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,11 +66,18 @@ public class GlobalExceptionHandler  {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({ProductPermissionException.class})
+    public ResponseEntity<Object> handleProductPermission(ProductPermissionException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex) {
         Map<String, String> body = new HashMap<>();
         body.put("message", ex.getMessage());
-        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({JwtException.class})
@@ -91,7 +99,6 @@ public class GlobalExceptionHandler  {
         body.put("message","Error interno del servidor");
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 }
 
 

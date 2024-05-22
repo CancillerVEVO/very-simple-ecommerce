@@ -1,6 +1,7 @@
 package com.stellatech.elopezo.ecommerce.exceptions;
 
 import com.stellatech.elopezo.ecommerce.api.auth.exceptions.UserAuthenticationException;
+import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductNotFoundException;
 import com.stellatech.elopezo.ecommerce.api.users.exceptions.UserAlredyExistsException;
 import com.stellatech.elopezo.ecommerce.api.users.exceptions.UserNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler  {
         Map<String, String> body = new HashMap<>();
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({ProductNotFoundException.class})
+    public ResponseEntity<Object> handleProductNotFound(ProductNotFoundException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 }
 

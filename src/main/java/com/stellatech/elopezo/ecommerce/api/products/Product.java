@@ -57,4 +57,52 @@ public class Product {
     private Set<OrderItems> orderItems;
 
 
+    // Builder Pattern
+    public static class Builder {
+        private String name;
+        private String description;
+        private Integer stock;
+        private Double price;
+        private User user;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder stock(Integer stock) {
+            this.stock = stock;
+            return this;
+        }
+
+        public Builder price(Double price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Product build() {
+            Product product = new Product();
+            product.setName(this.name);
+            product.setDescription(this.description);
+            product.setStock(this.stock);
+            product.setPrice(this.price);
+            product.setUser(this.user);
+            return product;
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
 }

@@ -1,6 +1,11 @@
 package com.stellatech.elopezo.ecommerce.api.products;
 
+import com.stellatech.elopezo.ecommerce.api.products.dto.CreateProductRequestDto;
+import com.stellatech.elopezo.ecommerce.api.products.dto.ProductDetailResponseDto;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -12,17 +17,21 @@ public class ProductController {
     }
 
     @GetMapping
-    public Iterable<Product> getProducts() {
-        return productService.getProducts();
+    public Iterable<ProductDetailResponseDto> getProducts() {
+        Iterable<Product> products = productService.getProducts();
+
+        return ProductDetailResponseDto.fromIterable(products);
+
     }
 
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable Long id) {
-        return productService.getProduct(id);
+    public ProductDetailResponseDto getProduct(@PathVariable Long id) {
+        Product product = productService.getProduct(id);
+        return ProductDetailResponseDto.fromProduct(product);
     }
 
-    @PostMapping
-    public Product addProduct(@RequestBody Product product) {
+    @PostMapping("/create")
+    public Product addProduct(@Valid @RequestBody CreateProductRequestDto product) {
         return productService.addProduct(product);
     }
 

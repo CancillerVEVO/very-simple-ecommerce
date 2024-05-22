@@ -1,5 +1,7 @@
 package com.stellatech.elopezo.ecommerce.api.products;
 
+import com.stellatech.elopezo.ecommerce.api.products.dto.CreateProductRequestDto;
+import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,11 +17,19 @@ public class ProductService {
     }
 
     public Product getProduct(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id).
+                orElseThrow(()-> new ProductNotFoundException("Product not found"));
     }
 
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+    public Product addProduct(CreateProductRequestDto product) {
+       Product newProduct = Product.builder()
+               .name(product.getName())
+               .description(product.getDescription())
+               .stock(product.getStock())
+               .price(product.getPrice())
+               .build();
+
+         return productRepository.save(newProduct);
     }
 
     public void deleteProduct(Long id) {

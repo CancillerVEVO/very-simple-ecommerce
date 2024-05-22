@@ -47,8 +47,11 @@ public class JwtService {
         return buildToken(extraClaims, userDetails, Long.parseLong(jwtExpiration));
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, Long.parseLong(jwtExpiration));
+    public String generateToken(UserDetails userDetails, Long userId) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", userId);
+        return buildToken(extraClaims, userDetails, Long.parseLong(jwtExpiration));
+
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -67,6 +70,10 @@ public class JwtService {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
     }
 
     private boolean isTokenExpired(String token) {

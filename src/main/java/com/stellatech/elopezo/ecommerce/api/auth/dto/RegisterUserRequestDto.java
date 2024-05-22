@@ -3,8 +3,7 @@ package com.stellatech.elopezo.ecommerce.api.auth.dto;
 import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.Pattern.Flag;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 
 @Data
 public class RegisterUserRequestDto {

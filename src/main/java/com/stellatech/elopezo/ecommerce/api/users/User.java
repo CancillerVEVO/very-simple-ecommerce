@@ -1,5 +1,6 @@
 package com.stellatech.elopezo.ecommerce.api.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stellatech.elopezo.ecommerce.api.orders.Order;
 import com.stellatech.elopezo.ecommerce.api.products.Product;
 import jakarta.persistence.*;
@@ -68,9 +69,11 @@ public class User implements UserDetails {
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Product> products;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Order> orders;
 
     @Override
@@ -96,5 +99,8 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    public User(Long id) {
+        this.id = id;
     }
 }

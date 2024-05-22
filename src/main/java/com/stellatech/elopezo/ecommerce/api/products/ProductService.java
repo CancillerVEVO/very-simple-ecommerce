@@ -2,14 +2,18 @@ package com.stellatech.elopezo.ecommerce.api.products;
 
 import com.stellatech.elopezo.ecommerce.api.products.dto.CreateProductRequestDto;
 import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductNotFoundException;
+import com.stellatech.elopezo.ecommerce.api.users.User;
+import com.stellatech.elopezo.ecommerce.api.users.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final UserService userService;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, UserService userService) {
         this.productRepository = productRepository;
+        this.userService = userService;
     }
 
     public Iterable<Product> getProducts() {
@@ -18,30 +22,38 @@ public class ProductService {
 
     public Product getProduct(Long id) {
         return productRepository.findById(id).
-                orElseThrow(()-> new ProductNotFoundException("Product not found"));
+                orElseThrow(()-> new ProductNotFoundException("Producto no encontrado"));
     }
 
-    public Product addProduct(CreateProductRequestDto product) {
-       Product newProduct = Product.builder()
-               .name(product.getName())
-               .description(product.getDescription())
-               .stock(product.getStock())
-               .price(product.getPrice())
-               .build();
+    public Product addProduct(CreateProductRequestDto product, Long userId) {
+        User user = userService.getById(userId);
 
-         return productRepository.save(newProduct);
+        Product newProduct = Product.builder()
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .stock(product.getStock())
+                .user(user)
+                .build();
+
+        return productRepository.save(newProduct);
+
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id).
+                orElseThrow(()-> new ProductNotFoundException("Producto no encontrado"));
+
+        productRepository.delete(product);
     }
 
-public Product updateProduct(Long id, Product product) {
-        Product existingProduct = productRepository.findById(id).orElse(null);
-        if (existingProduct == null) {
-            return null;
-        }
+public Product updateProduct(Long id, CreateProductRequestDto product) {
+        Product existingProduct = productRepository.findById(id).orElseThrow(
+                () -> new ProductNotFoundException("Producto no encontrado")
+        );
+
         existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setStock(product.getStock());
         return productRepository.save(existingProduct);

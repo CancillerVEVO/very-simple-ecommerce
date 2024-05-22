@@ -2,16 +2,16 @@ package com.stellatech.elopezo.ecommerce.api.products;
 
 import com.stellatech.elopezo.ecommerce.api.products.dto.CreateProductRequestDto;
 import com.stellatech.elopezo.ecommerce.api.products.dto.ProductDetailResponseDto;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final ProductService productService;
-
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -30,9 +30,10 @@ public class ProductController {
         return ProductDetailResponseDto.fromProduct(product);
     }
 
-    @PostMapping("/create")
-    public Product addProduct(@Valid @RequestBody CreateProductRequestDto product) {
-        return productService.addProduct(product);
+    @PostMapping
+    public Product addProduct(@RequestBody CreateProductRequestDto product, HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        return productService.addProduct(product, userId);
     }
 
     @DeleteMapping("/{id}")
@@ -41,7 +42,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+    public ProductDetailResponseDto updateProduct(@PathVariable Long id, @RequestBody CreateProductRequestDto product) {
+        Product updatedProduct = productService.updateProduct(id, product);
+        return ProductDetailResponseDto.fromProduct(updatedProduct);
     }
 }

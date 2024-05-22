@@ -16,6 +16,7 @@ public class ProductDetailResponseDto {
     private double price;
     private int stock;
     private Long userId;
+    private String createdAt;
 
     public static Iterable<ProductDetailResponseDto> fromIterable(Iterable<Product> products) {
         return StreamSupport.stream(products.spliterator(), false)
@@ -26,6 +27,7 @@ public class ProductDetailResponseDto {
                         .price(product.getPrice())
                         .stock(product.getStock())
                         .userId(product.getUser().getId())
+                        .createdAt(product.getCreatedAt().toString())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -38,6 +40,7 @@ public class ProductDetailResponseDto {
                 .price(product.getPrice())
                 .stock(product.getStock())
                 .userId(product.getUser().getId())
+                .createdAt(product.getCreatedAt().toString())
                 .build();
     }
 }

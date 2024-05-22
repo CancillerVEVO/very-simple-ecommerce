@@ -3,6 +3,8 @@ package com.stellatech.elopezo.ecommerce.api.products;
 import com.stellatech.elopezo.ecommerce.api.order_items.OrderItems;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "products")
 public class Product {
@@ -22,7 +26,9 @@ public class Product {
     private String name;
     @Column(length = 128)
     private String description;
+    @Column
     private Integer stock;
+    @Column
     private Double price;
 
     @ManyToOne
@@ -56,53 +62,5 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<OrderItems> orderItems;
 
-
-    // Builder Pattern
-    public static class Builder {
-        private String name;
-        private String description;
-        private Integer stock;
-        private Double price;
-        private User user;
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder stock(Integer stock) {
-            this.stock = stock;
-            return this;
-        }
-
-        public Builder price(Double price) {
-            this.price = price;
-            return this;
-        }
-
-        public Builder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public Product build() {
-            Product product = new Product();
-            product.setName(this.name);
-            product.setDescription(this.description);
-            product.setStock(this.stock);
-            product.setPrice(this.price);
-            product.setUser(this.user);
-            return product;
-        }
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
 
 }

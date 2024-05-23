@@ -1,6 +1,8 @@
 package com.stellatech.elopezo.ecommerce.exceptions;
 
 import com.stellatech.elopezo.ecommerce.api.auth.exceptions.UserAuthenticationException;
+import com.stellatech.elopezo.ecommerce.api.orders.exceptions.OrderNotFoundException;
+import com.stellatech.elopezo.ecommerce.api.orders.exceptions.OrderPermissionException;
 import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductNotFoundException;
 import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductPermissionException;
 import com.stellatech.elopezo.ecommerce.api.users.exceptions.UserAlredyExistsException;
@@ -68,6 +70,20 @@ public class GlobalExceptionHandler  {
 
     @ExceptionHandler({ProductPermissionException.class})
     public ResponseEntity<Object> handleProductPermission(ProductPermissionException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({OrderNotFoundException.class})
+    public ResponseEntity<Object> handleOrderNotFound(OrderNotFoundException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({OrderPermissionException.class})
+    public ResponseEntity<Object> handleOrderPermission(OrderPermissionException ex) {
         Map<String, String> body = new HashMap<>();
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);

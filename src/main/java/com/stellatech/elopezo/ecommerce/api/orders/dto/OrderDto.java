@@ -1,5 +1,6 @@
 package com.stellatech.elopezo.ecommerce.api.orders.dto;
 
+import com.stellatech.elopezo.ecommerce.api.order_items.dto.OrderItemsDto;
 import com.stellatech.elopezo.ecommerce.api.orders.Order;
 import lombok.Builder;
 import lombok.Data;
@@ -12,13 +13,13 @@ import java.util.stream.StreamSupport;
 public class OrderDto {
     private Long id;
     private Long userId;
-    private String createdAt;
+    private Iterable<OrderItemsDto> orderItems;
 
     public static OrderDto fromOrder(Order order) {
         return OrderDto.builder()
                 .id(order.getId())
                 .userId(order.getUser().getId())
-                .createdAt(order.getCreatedAt().toString())
+                .orderItems(OrderItemsDto.fromIterable(order.getOrderItems()))
                 .build();
     }
 
@@ -27,7 +28,7 @@ public class OrderDto {
                 .map(order -> OrderDto.builder()
                         .id(order.getId())
                         .userId(order.getUser().getId())
-                        .createdAt(order.getCreatedAt().toString())
+                        .orderItems(OrderItemsDto.fromIterable(order.getOrderItems()))
                         .build())
                 .collect(Collectors.toList());
     }

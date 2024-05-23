@@ -3,10 +3,18 @@ package com.stellatech.elopezo.ecommerce.api.order_items;
 import com.stellatech.elopezo.ecommerce.api.orders.Order;
 import com.stellatech.elopezo.ecommerce.api.products.Product;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderItems {
     @EmbeddedId
     OrderItemsKey id;
@@ -51,4 +59,13 @@ public class OrderItems {
             insertable = false
     )
     private LocalDateTime deletedAt;
+
+
+    public OrderItems(OrderItemsKey id, Order order, Product product, Integer quantity, Double price) {
+        this.id = id;
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+    }
 }

@@ -14,25 +14,26 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public OrderDto getOrderById(@PathVariable Long id) {
-        return orderService.getById(id);
+    public Order getOrderById(@PathVariable Long id, HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        return orderService.getById(id, userId);
     }
 
     @GetMapping
-    public Iterable<OrderDto> getOrders() {
+    public Iterable<Order> getOrders() {
         return orderService.getOrders();
     }
 
     @PostMapping
     public OrderDto addOrder(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        return orderService.addOrder(userId);
+        return OrderDto.fromOrder(orderService.addOrder(userId));
     }
 
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable Long id, HttpServletRequest request) {
             Long userId = (Long) request.getAttribute("userId");
-            orderService.deletOrder(id, userId);
+            orderService.deleteOrder(id, userId);
     }
 
 }

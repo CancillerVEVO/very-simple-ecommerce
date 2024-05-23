@@ -17,26 +17,26 @@ public class OrderService {
         this.userService = userService;
     }
 
-    public Iterable<OrderDto> getOrders() {
-        return OrderDto.fromIterable(orderRepository.findAll());
+    public Iterable<Order> getOrders() {
+        return orderRepository.findAll();
 
     }
 
-    public OrderDto getById(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order no encontrada"));
-        return OrderDto.fromOrder(order);
+    public Order getById(Long id, Long userId) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Orden no encontrada"));
+        if (!order.getUser().getId().equals(userId)) {
+            throw new OrderPermissionException("No tienes permiso para ver esta orden");
+        }
+        return order;
     }
-
-    public OrderDto addOrder(Long userId) {
+      public Order addOrder(Long userId) {
         User user = userService.getById(userId);
-        Order newOrder = Order.builder()
+        return orderRepository.save(Order.builder()
                 .user(user)
-                .build();
-
-        return OrderDto.fromOrder(orderRepository.save(newOrder));
+                .build());
     }
 
-    public void deletOrder(Long orderId, Long userId) {
+    public void deleteOrder(Long orderId, Long userId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("Orden no encontrada"));
         if (!order.getUser().getId().equals(userId)) {
             throw new OrderPermissionException("No tienes permiso para eliminar esta orden");

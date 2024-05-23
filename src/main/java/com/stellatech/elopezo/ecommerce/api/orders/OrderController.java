@@ -1,5 +1,6 @@
 package com.stellatech.elopezo.ecommerce.api.orders;
 
+import com.stellatech.elopezo.ecommerce.api.orders.dto.OrderDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,25 +14,25 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public Order getOrderById(@PathVariable Long id) {
+    public OrderDto getOrderById(@PathVariable Long id) {
         return orderService.getById(id);
     }
 
     @GetMapping
-    public Iterable<Order> getOrders() {
+    public Iterable<OrderDto> getOrders() {
         return orderService.getOrders();
     }
 
     @PostMapping
-    public Order addOrder(HttpServletRequest request) {
+    public OrderDto addOrder(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         return orderService.addOrder(userId);
     }
 
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable Long id, HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
-        orderService.deletOrder(id, userId);
+            Long userId = (Long) request.getAttribute("userId");
+            orderService.deletOrder(id, userId);
     }
 
 }

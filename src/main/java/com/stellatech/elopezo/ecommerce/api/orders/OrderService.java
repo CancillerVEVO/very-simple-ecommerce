@@ -1,6 +1,7 @@
 package com.stellatech.elopezo.ecommerce.api.orders;
 
 
+import com.stellatech.elopezo.ecommerce.api.orders.dto.OrderDto;
 import com.stellatech.elopezo.ecommerce.api.orders.exceptions.OrderNotFoundException;
 import com.stellatech.elopezo.ecommerce.api.orders.exceptions.OrderPermissionException;
 import com.stellatech.elopezo.ecommerce.api.users.User;
@@ -16,20 +17,23 @@ public class OrderService {
         this.userService = userService;
     }
 
-    public Iterable<Order> getOrders() {
-        return orderRepository.findAll();
+    public Iterable<OrderDto> getOrders() {
+        return OrderDto.fromIterable(orderRepository.findAll());
+
     }
 
-    public Order getById(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order no encontrada"));
+    public OrderDto getById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order no encontrada"));
+        return OrderDto.fromOrder(order);
     }
 
-    public Order addOrder(Long userId) {
+    public OrderDto addOrder(Long userId) {
         User user = userService.getById(userId);
         Order newOrder = Order.builder()
                 .user(user)
                 .build();
-        return orderRepository.save(newOrder);
+
+        return OrderDto.fromOrder(orderRepository.save(newOrder));
     }
 
     public void deletOrder(Long orderId, Long userId) {

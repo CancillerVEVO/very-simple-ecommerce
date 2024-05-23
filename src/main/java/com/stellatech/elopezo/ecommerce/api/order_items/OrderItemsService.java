@@ -2,7 +2,9 @@ package com.stellatech.elopezo.ecommerce.api.order_items;
 
 import com.stellatech.elopezo.ecommerce.api.order_items.dto.CreateOrderItemRequestDto;
 import com.stellatech.elopezo.ecommerce.api.order_items.dto.OrderItemsDto;
+import com.stellatech.elopezo.ecommerce.api.order_items.dto.UpdateOrderItemRequestDto;
 import com.stellatech.elopezo.ecommerce.api.order_items.exceptions.InsufficientProductStockException;
+import com.stellatech.elopezo.ecommerce.api.order_items.exceptions.ItemAlredyInOrderException;
 import com.stellatech.elopezo.ecommerce.api.order_items.exceptions.OrderItemNotFoundException;
 import com.stellatech.elopezo.ecommerce.api.orders.Order;
 import com.stellatech.elopezo.ecommerce.api.orders.OrderService;
@@ -44,6 +46,10 @@ public class OrderItemsService {
 
        OrderItemsKey orderItemsKey = new OrderItemsKey(order.getId(), product.getId());
 
+        if (orderItemsRepository.findById(orderItemsKey).isPresent()) {
+            throw new ItemAlredyInOrderException("El producto ya está en la orden");
+        }
+
 
         OrderItems orderItem = new OrderItems(
                 orderItemsKey,
@@ -51,9 +57,10 @@ public class OrderItemsService {
                 product,
                 createOrderItemRequestDto.getQuantity(),
                 createOrderItemRequestDto.getQuantity() * product.getPrice()
+
         );
 
-       return orderItemsRepository.save(orderItem);
+        return orderItemsRepository.save(orderItem);
     }
 
     public void deleteOrderItem(Long orderId, Long productId, Long userId) {
@@ -65,14 +72,18 @@ public class OrderItemsService {
         orderItemsRepository.delete(orderItem);
     }
 
-    public void updateOrderItem( OrderItemsDto orderItemsDto, Long userId) {
-        Order order = orderService.getById(orderItemsDto.getOrderId(), userId);
-        Product product = productService.getById(orderItemsDto.getProductId());
+    public OrderItems updateOrderItem(UpdateOrderItemRequestDto updateOrderItemRequestDto, Long orderId, Long productId, Long userId) {
+        Order order = orderService.getById(orderId, userId);
+        Product product = productService.getById(productId);
         OrderItems orderItem = orderItemsRepository.findById(new OrderItemsKey(order.getId(), product.getId()))
                 .orElseThrow(() -> new OrderItemNotFoundException("Item de orden no encontrado"));
 
-        orderItem.setQuantity(orderItemsDto.getQuantity());
-        orderItemsRepository.save(orderItem);
+        if (updateOrderItemRequestDto.getQuantity() > product.getStock()) {
+            throw new InsufficientProductStockException("El producto no tiene suficiente stock para la cantidad solicitada");
+        }
 
+        orderItem.setQuantity(updateOrderItemRequestDto.getQuantity());
+        orderItem.setPrice(updateOrderItemRequestDto.getQuantity() * product.getPrice());
+        return orderItemsRepository.save(orderItem);
     }
 }

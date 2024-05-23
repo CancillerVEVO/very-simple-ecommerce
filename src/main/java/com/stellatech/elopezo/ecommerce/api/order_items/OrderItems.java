@@ -68,4 +68,9 @@ public class OrderItems {
         this.quantity = quantity;
         this.price = price;
     }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

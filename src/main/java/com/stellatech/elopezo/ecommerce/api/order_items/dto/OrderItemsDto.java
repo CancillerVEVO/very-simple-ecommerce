@@ -1,6 +1,7 @@
 package com.stellatech.elopezo.ecommerce.api.order_items.dto;
 
 import com.stellatech.elopezo.ecommerce.api.order_items.OrderItems;
+import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Data;
 

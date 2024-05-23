@@ -2,6 +2,7 @@ package com.stellatech.elopezo.ecommerce.api.order_items;
 
 import com.stellatech.elopezo.ecommerce.api.order_items.dto.CreateOrderItemRequestDto;
 import com.stellatech.elopezo.ecommerce.api.order_items.dto.OrderItemsDto;
+import com.stellatech.elopezo.ecommerce.api.order_items.dto.UpdateOrderItemRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,5 +29,25 @@ public class OrderItemsController {
         Long userId = (Long) request.getAttribute("userId");
         return OrderItemsDto.fromEntity(orderItemsService.addOrderItem(createOrderItemRequestDto, orderId, userId));
     }
+
+    @PutMapping("/orders/{orderId}/items/{productId}")
+    public OrderItemsDto updateOrderItem(@RequestBody UpdateOrderItemRequestDto update,
+                                      @PathVariable("orderId") Long orderId,
+                                      @PathVariable("productId") Long productId,
+                                      HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+
+        return OrderItemsDto.fromEntity(orderItemsService.updateOrderItem(update, orderId, productId, userId));
+    };
+
+    @DeleteMapping("/orders/{orderId}/items/{productId}")
+    public void deleteOrderItem(@PathVariable("orderId") Long orderId,
+                                @PathVariable("productId") Long productId,
+                                HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        orderItemsService.deleteOrderItem(orderId, productId, userId);
+    }
+
 
 }

@@ -2,6 +2,8 @@ package com.stellatech.elopezo.ecommerce.exceptions;
 
 import com.stellatech.elopezo.ecommerce.api.auth.exceptions.UserAuthenticationException;
 import com.stellatech.elopezo.ecommerce.api.order_items.exceptions.InsufficientProductStockException;
+import com.stellatech.elopezo.ecommerce.api.order_items.exceptions.ItemAlredyInOrderException;
+import com.stellatech.elopezo.ecommerce.api.order_items.exceptions.OrderItemNotFoundException;
 import com.stellatech.elopezo.ecommerce.api.orders.exceptions.OrderNotFoundException;
 import com.stellatech.elopezo.ecommerce.api.orders.exceptions.OrderPermissionException;
 import com.stellatech.elopezo.ecommerce.api.products.exceptions.ProductNotFoundException;
@@ -137,6 +139,21 @@ public class GlobalExceptionHandler  {
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({ItemAlredyInOrderException.class})
+    public ResponseEntity<Object> handleItemAlredyInOrder(ItemAlredyInOrderException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({OrderItemNotFoundException.class})
+    public ResponseEntity<Object> handleOrderItemNotFound(OrderItemNotFoundException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
 }
 
 

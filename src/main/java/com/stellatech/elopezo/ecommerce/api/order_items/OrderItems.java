@@ -73,4 +73,10 @@ public class OrderItems {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+
+    public void updateOrderItem(Integer quantity, Double price) {
+        this.quantity = quantity;
+        this.price = price;
+    }
 }

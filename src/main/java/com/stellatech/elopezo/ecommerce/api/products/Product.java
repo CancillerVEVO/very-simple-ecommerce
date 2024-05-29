@@ -1,5 +1,6 @@
 package com.stellatech.elopezo.ecommerce.api.products;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.stellatech.elopezo.ecommerce.api.order_items.OrderItems;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import jakarta.persistence.*;
@@ -37,6 +38,7 @@ public class Product {
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_products_users")
     )
+    @JsonBackReference
     private User user;
 
     @Column(name = "created_at",

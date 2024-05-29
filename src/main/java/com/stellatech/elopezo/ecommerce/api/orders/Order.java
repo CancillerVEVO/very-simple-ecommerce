@@ -1,5 +1,6 @@
 package com.stellatech.elopezo.ecommerce.api.orders;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.stellatech.elopezo.ecommerce.api.order_items.OrderItems;
 import com.stellatech.elopezo.ecommerce.api.users.User;
 import jakarta.persistence.*;
@@ -17,6 +18,10 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "orders")
+@NamedEntityGraph(
+        name = "Order.orderItems",
+        attributeNodes = @NamedAttributeNode("orderItems")
+)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +35,7 @@ public class Order {
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_orders_users")
     )
+    @JsonBackReference
     private User user;
 
     @Column(name = "created_at",

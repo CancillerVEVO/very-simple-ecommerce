@@ -19,7 +19,6 @@ public class OrderService {
 
     public Iterable<Order> getOrders() {
         return orderRepository.findAll();
-
     }
 
     public Order getById(Long id, Long userId) {

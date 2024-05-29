@@ -51,14 +51,13 @@ public class OrderItemsService {
         }
 
 
-        OrderItems orderItem = new OrderItems(
-                orderItemsKey,
-                order,
-                product,
-                createOrderItemRequestDto.getQuantity(),
-                createOrderItemRequestDto.getQuantity() * product.getPrice()
-
-        );
+        OrderItems orderItem = OrderItems.builder()
+                .id(orderItemsKey)
+                .order(order)
+                .product(product)
+                .quantity(createOrderItemRequestDto.getQuantity())
+                .price(createOrderItemRequestDto.getQuantity() * product.getPrice())
+                .build();
 
         return orderItemsRepository.save(orderItem);
     }
@@ -82,8 +81,11 @@ public class OrderItemsService {
             throw new InsufficientProductStockException("El producto no tiene suficiente stock para la cantidad solicitada");
         }
 
-        orderItem.setQuantity(updateOrderItemRequestDto.getQuantity());
-        orderItem.setPrice(updateOrderItemRequestDto.getQuantity() * product.getPrice());
+        orderItem.updateOrderItem(
+                updateOrderItemRequestDto.getQuantity(),
+                updateOrderItemRequestDto.getQuantity() * product.getPrice()
+        );
+
         return orderItemsRepository.save(orderItem);
     }
 }
